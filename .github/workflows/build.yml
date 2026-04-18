@@ -1,0 +1,25 @@
+name: Build FTO Indicator
+on: [push] # ให้ทำงานทุกครั้งที่มีการอัปโหลดโค้ด
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install Dependencies
+        run: npm install
+        
+      - name: Build Project
+        run: npm run build
+        
+      - name: Upload Build Result
+        uses: actions/upload-artifact@v3
+        with:
+          name: fto-indicator-js # ชื่อไฟล์ที่จะให้เราโหลด
+          path: dist/index.js    # ตำแหน่งไฟล์ที่ build เสร็จแล้ว
