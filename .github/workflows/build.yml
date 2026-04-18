@@ -1,25 +1,30 @@
 name: Build FTO Indicator
-on: [push] # ให้ทำงานทุกครั้งที่มีการอัปโหลดโค้ด
+on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20' # ใช้ Node เวอร์ชันใหม่กว่า
           
-      - name: Install Dependencies
-        run: npm install
-        
-      - name: Build Project
-        run: npm run build
-        
+      - name: Install and Build
+        run: |
+          # หาว่าไฟล์ package.json อยู่ที่ไหน แล้วเข้าไปทำงานในนั้น
+          TARGET_DIR=$(find . -name "package.json" -exec dirname {} \; | head -n 1)
+          echo "Found package.json in $TARGET_DIR"
+          cd "$TARGET_DIR"
+          npm install
+          npm run build --if-present
+          
       - name: Upload Build Result
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4 # อัปเดตเป็น v4 ตามที่มันฟ้องครับ
         with:
-          name: fto-indicator-js # ชื่อไฟล์ที่จะให้เราโหลด
-          path: dist/index.js    # ตำแหน่งไฟล์ที่ build เสร็จแล้ว
+          name: fto-indicator-js
+          # ค้นหาไฟล์ .js ที่สร้างเสร็จแล้วในโฟลเดอร์ dist
+          path: "**/dist/index.js"
+          if-no-files-found: error
