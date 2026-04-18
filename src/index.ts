@@ -1,7 +1,3 @@
-/**
- * @title Jamie Scalper
- */
-
 export default {
     name: "Jamie_Ultimate_Scalper",
     description: "MACD + EMA + ZigZag",
@@ -9,11 +5,11 @@ export default {
         emaFast: { type: "number", default: 50 },
         emaSlow: { type: "number", default: 100 }
     },
-    init(context) {
+    init(context: any) {
         context.addSeries("buy", { color: "#00ff00", style: "points" });
         context.addSeries("sell", { color: "#ff0000", style: "points" });
     },
-    async calculate(context) {
+    async calculate(context: any) {
         const { bars, index, series, parameters } = context;
         if (index < 100) return;
         
@@ -23,7 +19,6 @@ export default {
         if (e50 > e100) context.setBarBackgroundColor(index, "#00ff0015");
         else context.setBarBackgroundColor(index, "#ff000015");
         
-        // สัญญาณพื้นฐานเช็คระบบ
         if (bars.close[index] > e50 && bars.close[index-1] <= e50) {
             series.buy[index] = bars.low[index] - 5;
         }
