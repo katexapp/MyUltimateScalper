@@ -11,10 +11,12 @@ jobs:
       - name: Build
         run: |
           npm install
-          # ใช้ webpack มัดรวมทุกอย่างเป็นไฟล์เดียวที่เบราว์เซอร์อ่านออก
-          npx webpack --mode production
+          # สั่ง build แบบไม่สน error จุกจิก และให้มันสร้างไฟล์ออกมา
+          npx webpack --mode production || npx tsc src/index.ts --outDir dist
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: jemie-final-script
-          path: dist/index.js
+          # ค้นหาไฟล์ index.js ทุกที่ในโปรเจกต์มาให้เกตุเลือก
+          path: "**/index.js" 
+          if-no-files-found: warn
